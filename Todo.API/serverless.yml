@@ -3,6 +3,8 @@
 provider:
   name: aws
   runtime: dotnetcore3.1
+  environment:
+    DB_CONNECTION: ${env:DB_CONNECTION}
 
 package:
   individually: true

@@ -1,5 +1,7 @@
 ﻿using Amazon.Lambda.AspNetCoreServer;
+using dotenv.net;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 
 namespace Todo.API
 {
@@ -7,7 +9,13 @@ namespace Todo.API
     {
         protected override void Init(IWebHostBuilder builder)
         {
-            builder.UseStartup<Startup>();
+            DotEnv.Config(false);
+            builder
+                .ConfigureAppConfiguration(config =>
+                {
+                    config.AddEnvironmentVariables();
+                })
+                .UseStartup<Startup>();
         }
     }
 }

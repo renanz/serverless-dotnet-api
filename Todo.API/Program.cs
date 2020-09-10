@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using dotenv.net;
+using Microsoft.Extensions.Configuration;
 
 namespace Todo.API
 {
@@ -13,6 +15,7 @@ namespace Todo.API
 
         public static void Main(string[] args)
         {
+            DotEnv.Config(false);
             var host = CreateHostBuilder(args).Build();
 
             // migrate the database.  Best practice = in Main, using service scope
@@ -40,6 +43,7 @@ namespace Todo.API
         
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(app => app.AddEnvironmentVariables())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

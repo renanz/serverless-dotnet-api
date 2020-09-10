@@ -27,6 +27,7 @@ namespace Todo.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration["DB_CONNECTION"];
             services.AddControllers(setupAction => { setupAction.ReturnHttpNotAcceptable = true; })
                 .AddNewtonsoftJson(setupAction =>
                 {
@@ -77,7 +78,7 @@ namespace Todo.API
 
             services.AddDbContext<CourseLibraryContext>(options =>
             {
-                options.UseNpgsql("Host=localhost;Database=my_db;Username=postgres;Password=password");
+                options.UseNpgsql(connectionString);
             });   
         }
 
