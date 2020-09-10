@@ -12,5 +12,5 @@ functions:
     handler: TodoApp::Todo.API.LambdaEntryPoint::FunctionHandlerAsync
 
     package:
-      artifact: bin/Release/netcoreapp3.1/hello.zip
+      artifact: bin/Release/netcoreapp3.1/build.zip
    
