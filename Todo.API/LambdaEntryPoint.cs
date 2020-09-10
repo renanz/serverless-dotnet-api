@@ -7,8 +7,7 @@ namespace Todo.API
     {
         protected override void Init(IWebHostBuilder builder)
         {
-            builder
-                .UseStartup<Startup>();
+            builder.UseStartup<Startup>();
         }
     }
 }
