@@ -1,3 +1,4 @@
+using System;
 using Todo.API.DbContexts;
 using Todo.API.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 
 namespace Todo.API
@@ -76,10 +78,7 @@ namespace Todo.API
             services.AddScoped<ICourseRepository, CourseRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddDbContext<CourseLibraryContext>(options =>
-            {
-                options.UseNpgsql(connectionString);
-            });   
+            services.AddDbContext<CourseLibraryContext>(options => { options.UseNpgsql(connectionString); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,10 +101,34 @@ namespace Todo.API
             }
 
             app.UseRouting();
+            UpdateDb(app);
 
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+        }
+
+        private static void UpdateDb(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<CourseLibraryContext>())
+                {
+                    var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    try
+                    {
+                        context.Database.EnsureDeleted();
+                        context.Database.Migrate();
+                        logger.LogInformation("Success migrating.");
+                    }
+                    catch (Exception e)
+                    {
+                        logger.LogError(e, "An error occurred while migrating the database.");
+                    }
+                }
+            }
         }
     }
 }

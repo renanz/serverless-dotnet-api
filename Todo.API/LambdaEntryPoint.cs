@@ -7,6 +7,7 @@ namespace Todo.API
 {
     public class LambdaEntryPoint : APIGatewayProxyFunction
     {
+        
         protected override void Init(IWebHostBuilder builder)
         {
             DotEnv.Config(false);
