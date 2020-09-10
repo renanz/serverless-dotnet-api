@@ -1,0 +1,36 @@
+name: "lambda-deploy"
+on:
+  push:
+    paths:
+      - "Todo.API/**"
+      - ".github/**"
+    branches:
+      - master
+jobs:
+  deploy-lambda:
+    name: deploy-lambda
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+      - name: Use Dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '3.1.x'
+      - name: Installing Serverless
+        working-directory: Todo.API
+        run: npm i -g serverless
+      - name: Build Project
+        working-directory: Todo.API
+        run: ./build.sh
+      - name: serverless deploy
+        working-directory: Todo.API
+        run: serverless deploy -v
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
