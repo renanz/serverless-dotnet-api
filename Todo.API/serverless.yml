@@ -8,9 +8,12 @@ package:
   individually: true
 
 functions:
-  hello:
+  myapi:
     handler: TodoApp::Todo.API.LambdaEntryPoint::FunctionHandlerAsync
-
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
     package:
       artifact: bin/Release/netcoreapp3.1/build.zip
    
