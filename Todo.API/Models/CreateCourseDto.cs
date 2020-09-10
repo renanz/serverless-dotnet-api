@@ -1,6 +1,6 @@
 ﻿namespace Todo.API.Models
 {
-    public class CreateCourseDto
+    public class CreateCourseDto : ManipulationCourseDto
     {
         
     }

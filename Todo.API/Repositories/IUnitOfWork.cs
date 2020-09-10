@@ -1,7 +1,10 @@
 ﻿namespace Todo.API.Repositories
 {
-    public class IUnitOfWork
+    public interface IUnitOfWork
     {
-        
+        IAuthorRepository AuthorRepository { get;  }
+        ICourseRepository CourseRepository { get;  }
+        void Commit();
+        void Rollback();
     }
 }
